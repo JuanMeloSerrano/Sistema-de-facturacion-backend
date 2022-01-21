@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.query.criteria.internal.expression.ConcatExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -79,8 +80,6 @@ public class ClienteRestController {
 		return new ResponseEntity<Map<String, Object>>(response, (HttpStatus.CREATED));
 	}
 	
-	
-	
 	@PutMapping("/clientes/{id}")
 	public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Long id) {
 		
@@ -119,8 +118,19 @@ public class ClienteRestController {
 	
 	
 	@DeleteMapping("/clientes/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable long id) {
+	public ResponseEntity<?> delete(@PathVariable long id) {
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
 		clienteService.delete(id);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al eliminar el cliente en la base de datos!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		}
+		response.put("mensaje", "Cliente eliminado correctamente!");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
+		
 }
