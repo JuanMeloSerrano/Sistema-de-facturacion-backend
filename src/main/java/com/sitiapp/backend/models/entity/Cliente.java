@@ -24,13 +24,13 @@ public class Cliente implements Serializable {
 	@Column(name = "nombre", length =100, nullable = false)
 	private String nombre;
 		
-	@Column(name = "apellido", length =100, nullable = false)
+	@Column(name = "apellido", length =100)
 	private String apellido;
 		
-	@Column(name = "email", length =100, nullable = false)
+	@Column(name = "email", length =100, nullable = false, unique = true)
 	private String email;
 	
-	@Column(name = "create_at", length =100, nullable = false)	
+	@Column(name = "create_at", length =100)	
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
