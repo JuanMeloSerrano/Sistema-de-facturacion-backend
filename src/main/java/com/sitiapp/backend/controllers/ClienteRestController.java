@@ -2,12 +2,14 @@ package com.sitiapp.backend.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.hibernate.query.criteria.internal.expression.ConcatExpression;
+//import org.hibernate.query.criteria.internal.expression.ConcatExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+//import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sitiapp.backend.models.entity.Cliente;
@@ -56,16 +58,28 @@ public class ClienteRestController {
 		}
 		
 		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
-		
-		
-		
 	}
 	
 	@PostMapping("/clientes")
-	public ResponseEntity<?> create(@RequestBody Cliente cliente) {
+	public ResponseEntity<?> create(@RequestBody Cliente cliente, BindingResult result) {
 		
 		Cliente clienteNew = null;
 		Map<String, Object> response = new HashMap<>();
+		
+		if(result.hasErrors()) {
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El campo '" + err.getField() +"' "+ err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
+		
+		
+		
+		
+		
 		
 		try {
 			clienteNew = clienteService.save(cliente);
@@ -77,7 +91,7 @@ public class ClienteRestController {
 		}
 		response.put("mensaje", "El cliente ha sido creado con éxito!");
 		response.put("cliente", clienteNew);
-		return new ResponseEntity<Map<String, Object>>(response, (HttpStatus.CREATED));
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/clientes/{id}")
@@ -122,7 +136,7 @@ public class ClienteRestController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-		clienteService.delete(id);
+			clienteService.delete(id);
 		} catch (DataAccessException e) {
 			response.put("mensaje", "Error al eliminar el cliente en la base de datos!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));

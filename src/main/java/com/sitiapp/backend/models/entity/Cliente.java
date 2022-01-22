@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.lang.NonNull;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
@@ -21,12 +23,14 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "nombre", length =100, nullable = false, unique = false)
+	@NonNull
+	@Column(name = "nombre", length =100, nullable = false)
 	private String nombre;
 		
-	@Column(name = "apellido", length =100, nullable = false)
+	@Column(name = "apellido", length =100)
 	private String apellido;
 		
+	@NonNull
 	@Column(name = "email", length =100, nullable = false, unique = true)
 	private String email;
 	
