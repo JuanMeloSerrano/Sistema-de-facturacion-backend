@@ -118,10 +118,12 @@ public class ClienteRestController {
 		}
 		try {
 			
+			clienteActual.setTipoId(cliente.getTipoid());
 			clienteActual.setApellido(cliente.getApellido());
 			clienteActual.setNombre(cliente.getNombre());
 			clienteActual.setEmail(cliente.getEmail());
 			clienteActual.setCreateAt(cliente.getCreateAt());
+			clienteActual.setEstado(cliente.getEstado());
 		
 			clienteUpdate = clienteService.save(clienteActual);
 			

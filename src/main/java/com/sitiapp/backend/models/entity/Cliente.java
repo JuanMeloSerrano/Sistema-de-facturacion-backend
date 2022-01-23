@@ -27,6 +27,10 @@ public class Cliente implements Serializable {
 	private Long id;
 	
 	@NotEmpty(message = "No puede estar vacio")
+	@Column(name = "tipoid", length =100, nullable = false)
+	private String tipoid;
+	
+	@NotEmpty(message = "No puede estar vacio")
 	@Size(min = 4, max = 15, message = "el tamaño tiene que estar entre 4 y 15")
 	@Column(name = "nombre", length =100, nullable = false)
 	private String nombre;
@@ -36,7 +40,7 @@ public class Cliente implements Serializable {
 	private String apellido;
 	
 	@NotEmpty(message = "No puede estar vacio")
-	@Column(name = "email", length =100, nullable = false, unique = false)
+	@Column(name = "email", length =100, nullable = false, unique = true)
 	private String email;
 	
 	@NonNull
@@ -44,6 +48,23 @@ public class Cliente implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
+	@NotEmpty(message = "No puede estar vacio")
+	@Column(name = "estado", length =100, nullable = false)
+	private String estado;
+	
+	public String getTipoid() {
+		return tipoid;
+	}
+	public void setTipoId(String tipoid) {
+		this.tipoid = tipoid;
+	}
+	
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 	/*
 	@PrePersist
 	public void prePersist() {
